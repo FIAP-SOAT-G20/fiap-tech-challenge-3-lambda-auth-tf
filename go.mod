@@ -1,6 +1,6 @@
 module github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf
 
-go 1.24.1
+go 1.24.2
 
 require (
 	github.com/aws/aws-lambda-go v1.48.0
@@ -15,6 +15,7 @@ require (
 )
 
 require (
+	github.com/blmayer/awslambdarpc v1.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
@@ -22,7 +23,7 @@ require (
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/kr/text v0.2.0 // indirect
+	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

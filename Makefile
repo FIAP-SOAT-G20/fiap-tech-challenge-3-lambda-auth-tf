@@ -1,22 +1,25 @@
 .DEFAULT_GOAL := help
 
 # Variables
-APP_NAME=app
-MAIN_FILE=cmd/server/main.go
-DOCKER_REGISTRY=ghcr.io
-DOCKER_REGISTRY_APP=fiap-soat-g20/fiap-techchallenge-fase2
-DOCKER_REGISTRY_MOCK_SERVER_APP=fiap-soat-g20/mock-server
+LAMBDA_DIR     = .
+BINARY_NAME    = bin/bootstrap
+ZIP_NAME       = dist/function.zip
+BUILD_OS       = linux
+BUILD_ARCH     = amd64
+MAIN_FILE=main.go
+
 VERSION=$(shell git describe --tags --always --dirty)
-NAMESPACE=tech-challenge-system
 TEST_PATH=./internal/...
 TEST_COVERAGE_FILE_NAME=coverage.out
 MIGRATION_PATH = internal/infrastructure/database/migrations
 DB_URL = postgres://postgres:postgres@localhost:5432/fastfood_10soat_g18_tc2?sslmode=disable
+LAMBDA_INPUT_FILE=test/data/api_gateway_proxy_request_event_payload.json
 
 # Go commands
+AWSLAMBDARPCCMD=awslambdarpc
 GOCMD=go
 GOBUILD=$(GOCMD) build
-GORUN=$(GOCMD) run
+GORUN=$(GOCMD) $MAIN_FILE
 GOTEST=ENVIRONMENT=test $(GOCMD) test
 GOCLEAN=$(GOCMD) clean
 GOVET=$(GOCMD) vet
@@ -38,22 +41,25 @@ fmt: ## Format the code
 .PHONY: build
 build: fmt ## Build the application
 	@echo  "🟢 Building the application..."
-	$(GOBUILD) -o bin/$(APP_NAME) $(MAIN_FILE)
+	#$(GOBUILD) -v -gcflags='all=-N -l' -o bin/$(APP_NAME) $(MAIN_FILE)
+	GOOS=$(BUILD_OS) GOARCH=$(BUILD_ARCH) $(GOBUILD) -ldflags="-s -w" -o $(LAMBDA_DIR)/$(BINARY_NAME) $(LAMBDA_DIR)/main.go
+
+# 📦 Package the binary into a .zip file for Lambda deployment
+.PHONY: package
+package: build
+	@echo "📦 Packaging Lambda binary into zip..."
+	mkdir -p ./dist
+	zip -j $(LAMBDA_DIR)/$(ZIP_NAME) $(LAMBDA_DIR)/$(BINARY_NAME)
+
+.PHONY: run
+run: build run-db ## Run the application
+	@echo  "🟢 Running the application..."
+	awslambdarpc -a localhost:3300 -d $LAMBDA_INPUT_FILE
 
 .PHONY: run-db
 run-db: ## Run the database
 	@echo  "🟢 Running the database..."
 	docker-compose up -d db dbadmin
-
-.PHONY: run-mockserver
-run-mockserver: ## Run the mock server for payment gateway
-	@echo  "🟢 Running the mock server..."
-	docker-compose up -d mockserver
-
-.PHONY: run
-run: build run-db run-mockserver ## Run the application
-	@echo  "🟢 Running the application..."
-	$(GORUN) $(MAIN_FILE) || true
 
 .PHONY: stop
 stop: ## Stop the application
@@ -96,6 +102,7 @@ clean: ## Clean up binaries and coverage files
 	$(GOCLEAN)
 	rm -f $(APP_NAME)
 	rm -f $(TEST_COVERAGE_FILE_NAME)
+	rm -f $(LAMBDA_DIR)/$(BINARY_NAME) $(LAMBDA_DIR)/$(ZIP_NAME)
 
 .PHONY: mock
 mock: ## Generate mocks
@@ -106,12 +113,6 @@ mock: ## Generate mocks
 	@for file in internal/core/port/*.go; do \
 		go run go.uber.org/mock/mockgen@v0.5.0 -source=$$file -destination=internal/core/port/mocks/`basename $$file _port.go`_mock.go; \
 	done
-
-.PHONY: swagger
-swagger: ## Generate Swagger documentation
-	@echo  "🟢 Generating Swagger documentation..."
-	@go run github.com/swaggo/swag/cmd/swag@v1.16.4 fmt ./...
-	@go run github.com/swaggo/swag/cmd/swag@v1.16.4 init -g ${MAIN_FILE} --parseInternal true
 
 .PHONY: lint
 lint: ## Run linter
@@ -167,56 +168,6 @@ docker-push-mockserver: ## Push Docker image
 	@echo  "🟢 Pushing Docker mock server image..."
 	docker push $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_MOCK_SERVER_APP):$(VERSION)
 	docker push $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_MOCK_SERVER_APP):latest
-
-.PHONY: k8s-apply
-k8s-apply: ## Apply Kubernetes manifests
-	@echo  "🟢 Applying Kubernetes manifests..."
-	kubectl apply -f k8s/namespace.yaml
-	kubectl apply -f k8s/mockserver/
-	kubectl apply -f k8s/config/
-	kubectl apply -f k8s/postgres/
-	kubectl apply -f k8s/app/
-
-.PHONY: aws-eks-auth
-aws-eks-auth: ## Authenticate with AWS EKS with the 10soat aws profile
-	@echo  "🟢 Authenticating with AWS EKS..."
-	aws eks update-kubeconfig --name fiap-10soat-g18-k8s-cluster --profile 10soat
-
-.PHONY: k8s-delete
-k8s-delete: ## Delete Kubernetes resources
-	@echo  "🔴 Deleting Kubernetes resources..."
-	kubectl apply -f k8s/mockserver/
-	kubectl delete -f k8s/app/
-	kubectl delete -f k8s/postgres/
-	kubectl delete -f k8s/config/
-	kubectl delete -f k8s/namespace.yaml
-
-.PHONY: k8s-logs
-k8s-logs: ## Show application logs
-	@echo  "🟢 Showing application logs..."
-	kubectl logs -f -l app=product-api -n $(NAMESPACE)
-
-.PHONY: k8s-status
-k8s-status: ## Show Kubernetes resources status
-	@echo  "🟢 Showing Kubernetes resources status..."
-	@echo "=== Pods ==="
-	kubectl get pods -n $(NAMESPACE)
-	@echo "\n=== Services ==="
-	kubectl get svc -n $(NAMESPACE)
-	@echo "\n=== Deployments ==="
-	kubectl get deploy -n $(NAMESPACE)
-	@echo "\n=== HPA ==="
-	kubectl get hpa -n $(NAMESPACE)
-	@echo "\n=== Ingress ==="
-	kubectl get ingress -n $(NAMESPACE)
-	@echo "\n=== ConfigMaps ==="
-	kubectl get configmaps -n $(NAMESPACE)
-	@echo "\n=== Secrets ==="
-	kubectl get secrets -n $(NAMESPACE)
-
-k8s-set-namespace: ## Set Kubernetes namespace
-	@echo  "🟢 Setting Kubernetes namespace..."
-	kubectl config set-context --current --namespace=$(NAMESPACE)
 
 .PHONY: compose-build
 compose-build: ## Build the application with Docker Compose

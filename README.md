@@ -92,8 +92,8 @@ This project implements a serverless authentication service using Go, Clean Arch
 - Unit tests with testify and golden file responses
 - Error response standardization
 - Environment-based configuration
-- Docker support for local development
 - Terraform for AWS Lambda, API Gateway, IAM provisioning
+- 
 
 ---
 
@@ -120,6 +120,7 @@ This project implements a serverless authentication service using Go, Clean Arch
 - Docker & Docker Compose
 - AWS CLI
 - Terraform
+- 
 
 ### Local Development
 
@@ -145,8 +146,6 @@ make install
 
 ```shell
 make run
-# or to use Docker:
-docker compose up --build
 ```
 5. Run tests
 ```shell
@@ -157,100 +156,39 @@ make test
 ```shell
  make coverage
 ```
-📝 Authentication API
-POST /authenticate
+## 📝 Authentication API
 
-Request
-json
-
-Collapse
-Copiar
-1
-2
-3
-4
-⌄
-{
-"email": "user@example.com",
-"password": "yourpassword"
-}
-Success Response
-json
-
-Collapse
-Copiar
-1
-2
-3
-4
-⌄
-{
-"token": "<jwt-token>",
-"expires_in": 3600
-}
-Error Response
-json
-
-Collapse
-Copiar
-1
-2
-3
-⌄
-{
-"error": "Invalid credentials"
-}
-🏗️ Deployment
-Build Lambda binary:
-bash
-
-Collapse
-Copiar
-1
-make build
-Deploy resources using Terraform:
-bash
-
-Collapse
-Copiar
-1
-2
-3
-cd terraform
-terraform init
-terraform apply
-Deploy Lambda using AWS CLI or your CI/CD pipeline
-📈 Testing
-Unit tests: make test
-Coverage: make coverage
-Golden files for output validation are found in internal/infrastructure/aws/lambda/golden/.
-
-🧩 Architecture
-The project follows Clean Architecture, dividing source code into distinct layers: Domain, UseCases, Adapters, and Infrastructure. See docs/architecture.drawio for the full diagram.
-
-👏 Contributing
-Fork the repository and create your branch via make new-branch
-Run tests before PR (make test)
-Ensure code style with make lint
-Follow Conventional Commits for commit messages
-📄 License
-MIT License
-
-🙏 Support
-For issues, open a GitHub issue in this repository.
-
-<p align="right"><a href="#top">back to top</a></p>
-```
-
+## 🏗️ Deployment
 
 ```bash
 #build application for lambda
 GOOS=linux GOARCH=amd64 go build -tags lambda.norpc -o bootstrap main.go
 ```
+ 
+## 📈 Testing
+Unit tests: make test
+Coverage: make coverage
+Golden files for output validation are found in internal/infrastructure/aws/lambda/golden/.
+
+## 🧩 Architecture
+The project follows Clean Architecture, dividing source code into distinct layers: Domain, UseCases, Adapters, and Infrastructure. See docs/architecture.drawio for the full diagram.
+
+## 👏 Contributing
+Fork the repository and create your branch via make new-branch
+Run tests before PR (make test)
+Ensure code style with make lint
+Follow Conventional Commits for commit messages
+
+## 🙏 Support
+For issues, open a GitHub issue in this repository.
 
 
-Docs
+## 📚 Docs
 - [Deploy Go AWS lambda function using Terraform](https://www.thedevbook.com/deploy-go-aws-lambda-function-using-terraform/)
 - [How to use terraform variables](https://spacelift.io/blog/how-to-use-terraform-variables)
 - [Best practices writing lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 - [Code best practices for Go Lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/golang-handler.html#go-best-practices)
+- [Running and debugging lambda locally](https://medium.com/nagoya-foundation/running-and-debugging-go-lambda-functions-locally-156893e4ed0d)
+
+## 📄 License
+MIT License
