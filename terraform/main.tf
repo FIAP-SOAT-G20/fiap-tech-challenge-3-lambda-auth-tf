@@ -13,19 +13,6 @@ terraform {
   }
 }
 
-# Configure the AWS Provider
-provider "aws" {
-  region = "us-east-1"
-
-  default_tags {
-    tags = {
-      Project = "tutorial-terraform"
-      Environment = "development"
-    }
-  }
-}
-
-# Create a VPC
-resource "aws_vpc" "example" {
-  cidr_block = "10.0.0.0/16"
-}
+module "lambda_function" {
+  source = "./modules/lambda"
+} 

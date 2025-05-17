@@ -20,19 +20,17 @@ jobs:
 
       - name: Build Go Lambda binary
         run: |
-          mkdir -p tf_generated
-          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o tf_generated/bootstrap main.go
+          make build
 
       - name: Zip Lambda binary
         run: |
-          cd tf_generated
-          zip bootstrap.zip bootstrap
+          make package
 
-      - name: Upload Lambda artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: lambda-bootstrap
-          path: tf_generated/bootstrap.zip
+          name: upload-lambda-artifact
+          path: /dist/function.zip
+
 
   terraform:
     needs: build
@@ -55,6 +53,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Download Lambda artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: upload-lambda-artifact
+          path: /dist/function.zip
 
       - name: Terraform Init
         run: terraform init
