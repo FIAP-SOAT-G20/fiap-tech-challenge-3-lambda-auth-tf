@@ -142,17 +142,26 @@ cp .env.example .env
 make install
 ```
 
-4. Run locally (with hot reload):
+4. Initialize lambda to receive requests:
 
 ```shell
-make run
+# Starts database
+make compose-up
+# Starts lambda
+make start-lambda
 ```
-5. Run tests
+
+5. Trigger lambda events
+```shell
+make trigger-lambda 
+```
+
+6. Run tests
 ```shell
 make test 
 ```
 
-6. View coverage:
+7. View coverage:
 ```shell
  make coverage
 ```

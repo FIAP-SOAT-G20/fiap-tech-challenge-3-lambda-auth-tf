@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/adapter/controller"
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/adapter/gateway"
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/adapter/presenter"
@@ -16,7 +18,6 @@ import (
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/infrastructure/logger"
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/infrastructure/service"
 	"github.com/aws/aws-lambda-go/events"
-	"log"
 
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/core/port"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -31,7 +32,7 @@ var pr port.Presenter
 // init function is called in a lambda cold start. So, at this moment is initialized
 // all structures and also the database connection
 func init() {
-	fmt.Println("Initializing lambda presenter")
+	fmt.Println("🟠 Initializing lambda presenter")
 	cfg := config.LoadConfig()
 	l := logger.NewLogger(cfg)
 
@@ -53,7 +54,7 @@ func init() {
 
 // StartLambda is the function that tells lambda which function should be call to start lambda.
 func StartLambda() {
-	fmt.Println("Starting lambda")
+	fmt.Println("🟢 Lambda is ready to receive requests!")
 	lambda.Start(handleRequest)
 }
 
