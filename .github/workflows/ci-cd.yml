@@ -58,7 +58,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: upload-lambda-artifact
-          path: /dist/function.zip
+          path: ./dist/function.zip
 
       - name: Terraform Init
         run: terraform init
