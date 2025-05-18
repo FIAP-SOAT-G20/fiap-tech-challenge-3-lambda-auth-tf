@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "fastfood_auth_lambda" {
   function_name = "fastfood-auth"
-  runtime       = "go1.x"
+  runtime       = "provided.al2023"
   handler       = "bootstrap"               # binary’s filename
   role          = data.aws_iam_role.lambda_exec.arn
 
@@ -11,5 +11,9 @@ resource "aws_lambda_function" "fastfood_auth_lambda" {
   timeout          = 5
   publish          = true              # creates new versions automatically
   source_code_hash = filesha256(local.lambda_zip_path) # forces update on change
+
+  environment {
+    variables = local.merged_env
+  }
 }
 

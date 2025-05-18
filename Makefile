@@ -33,40 +33,40 @@ SHCMD=sh
 # Looks at comments using ## on targets and uses them to produce a help output.
 .PHONY: help
 help: ALIGN=22
-help: ## Print this message
+help: ## 📜 Print this message
 	@echo "Usage: make <command>"
 	@awk -F '::? .*## ' -- "/^[^':]+::? .*## /"' { printf "  make '$$(tput bold)'%-$(ALIGN)s'$$(tput sgr0)' - %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 	@echo
 
 .PHONY: fmt
-fmt: ## Format the code
+fmt: ## 🗂️ Format the code
 	@echo  "🟢 Formatting the code..."
 	$(GOCMD) fmt ./...
 	@echo
 
 .PHONY: build
-build: fmt ## Build the application
+build: fmt ## 🔨 Build the application
 	@echo  "🟢 Building the application..."
 	#$(GOBUILD) -v -gcflags='all=-N -l' -o bin/$(APP_NAME) $(MAIN_FILE)
 	GOOS=$(BUILD_OS) GOARCH=$(BUILD_ARCH) $(GOBUILD) -ldflags="-s -w" -o $(LAMBDA_DIR)/$(BINARY_NAME) $(LAMBDA_DIR)/main.go
 	@echo
 
-# 📦 Package the binary into a .zip file for Lambda deployment
+
 .PHONY: package
-package: build
+package: build ## 📦 Package the binary into a .zip file for Lambda deployment
 	@echo "📦 Packaging Lambda binary into zip..."
 	mkdir -p ./dist
 	zip -j $(LAMBDA_DIR)/$(ZIP_NAME) $(LAMBDA_DIR)/$(BINARY_NAME)
 	@echo
 
 .PHONY: start-lambda
-start-lambda:  build  ## Start the lambda application to prepare to receive requests
+start-lambda:  build  ## ▶ Start the lambda application locally to prepare to receive requests
 	@echo "🟢 Starting lambda ..."
 	@$(GOCMD) run $(LAMBDA_DIR)/main.go
 	@echo
 
 .PHONY: trigger-lambda
-trigger-lambda: ## Trigger lambda with the input file stored in variable $LAMBDA_INPUT_FILE
+trigger-lambda: ## ▶ Trigger lambda with the input file stored in variable $LAMBDA_INPUT_FILE
 	@echo "🟢 Triggering lambda with event: $(LAMBDA_INPUT_FILE)"
 	@PATH="$(shell go env GOPATH)/bin:$$PATH" \
 		'$(AWSLAMBDARPCCMD)' -a localhost:3300 -e $(LAMBDA_INPUT_FILE)
@@ -74,7 +74,7 @@ trigger-lambda: ## Trigger lambda with the input file stored in variable $LAMBDA
 
 
 .PHONY: test
-test: lint ## Run tests
+test: lint ## 🧪 Run tests
 	@echo  "🟢 Running tests..."
 	@$(GOFMT) ./...
 	@$(GOVET) ./...
@@ -83,7 +83,7 @@ test: lint ## Run tests
 	@echo
 
 .PHONY: coverage
-coverage: ## Run tests with coverage
+coverage: ## 🧪 Run tests with coverage
 	@echo  "🟢 Running tests with coverage..."
 # remove files that are not meant to be tested
 	$(GOTEST) $(TEST_PATH) -coverprofile=$(TEST_COVERAGE_FILE_NAME).tmp
@@ -96,7 +96,7 @@ coverage: ## Run tests with coverage
 	@echo
 
 .PHONY: clean
-clean: ## Clean up binaries and coverage files
+clean: ## 🧹 Clean up binaries and coverage files
 	@echo "🔴 Cleaning up..."
 	$(GOCLEAN)
 	rm -f $(APP_NAME)
@@ -106,13 +106,13 @@ clean: ## Clean up binaries and coverage files
 
 
 .PHONY: lint
-lint: ## Run linter
+lint: ## 🔍 Run linter
 	@echo "🟢 Running linter..."
 	@go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.7 run --out-format colored-line-number
 	@echo
 
 .PHONY: migrate-create
-migrate-create: ## Create new migration, usage example: make migrate-create name=create_table_products
+migrate-create: ## 🔄 Create new migration, usage example: make migrate-create name=create_table_products
 	@echo "🟢 Creating new migration..."
 # if name is not passed, required argument
 ifndef name
@@ -122,19 +122,19 @@ endif
 	@echo
 
 .PHONY: migrate-up
-migrate-up: ## Run migrations
+migrate-up: ## ⬆️ Run migrations
 	@echo "🟢 Running migrations..."
 	migrate -path ${MIGRATION_PATH} -database "${DB_URL}" -verbose up
 	@echo
 
 .PHONY: migrate-down
-migrate-down: ## Roll back migrations
+migrate-down: ## ⬇️ Roll back migrations
 	@echo "🔴 Rolling back migrations..."
 	migrate -path ${MIGRATION_PATH} -database "${DB_URL}" -verbose down
 	@echo
 
 .PHONY: install
-install: ## Install dependencies
+install: ## 📦 Install dependencies
 	@echo "🟢 Installing dependencies..."
 	go mod download
 	@go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.2
@@ -142,27 +142,52 @@ install: ## Install dependencies
 	@echo
 
 .PHONY: compose-up
-compose-up: ## Start development environment with Docker Compose
+compose-up: ## ▶ Start development environment with Docker Compose
 	@echo "🟢 Starting development environment..."
 	docker compose pull
 	docker-compose up -d --wait --build
 	@echo
 
 .PHONY: compose-down
-compose-down: ## Stop development environment with Docker Compose
+compose-down: ## ■ Stop development environment with Docker Compose
 	@echo "🔴 Stopping development environment..."
 	docker-compose down
 	@echo
 
 .PHONY: compose-clean
-compose-clean: ## Clean the application with Docker Compose, removing volumes and images
+compose-clean: ## 🧹 Clean the application with Docker Compose, removing volumes and images
 	@echo "🔴 Cleaning the application..."
 	docker compose down --volumes --rmi all
 	@echo
 
 .PHONY: scan
-scan: ## Run security scan
+scan: ## 🔍 Run security scan
 	@echo  "🟠 Running security scan..."
 	@go run golang.org/x/vuln/cmd/govulncheck@v1.1.4 -show verbose ./...
 	@go run github.com/aquasecurity/trivy/cmd/trivy@latest image --severity HIGH,CRITICAL $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_APP):latest
+	@echo
+
+
+.PHONY: terraform-init
+terraform-init: ## 🔄 Initialize Terraform
+	@echo "🟢 Initializing Terraform..."
+	terraform init
+	@echo
+
+.PHONY: terraform-plan
+terraform-plan: ## 🔄 Plan Terraform
+	@echo "🟢 Planning Terraform..."
+	terraform plan
+	@echo	
+
+.PHONY: terraform-apply
+terraform-apply: ## 🔄 Apply Terraform
+	@echo "🟢 Applying Terraform..."
+	terraform apply -var-file=terraform/vars.tfvars
+	@echo
+
+.PHONY: terraform-destroy
+terraform-destroy: ## 🔄 Destroy Terraform
+	@echo "🔴 Destroying Terraform..."
+	terraform destroy
 	@echo
