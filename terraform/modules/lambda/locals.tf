@@ -4,7 +4,7 @@ locals {
 
 locals {
   merged_env = merge(
-    var.lambda_env,           # from tfvars
+    var.lambda_env, 
     { DB_HOST = data.aws_ssm_parameter.db_host.value },
     { DB_PORT = data.aws_ssm_parameter.db_port.value },
     { DB_USER = data.aws_ssm_parameter.db_user.value },

@@ -93,7 +93,7 @@ This project implements a serverless authentication service using Go, Clean Arch
 - Error response standardization
 - Environment-based configuration
 - Terraform for AWS Lambda, API Gateway, IAM provisioning
-- 
+
 
 ---
 
@@ -169,11 +169,14 @@ make test
 
 ## 🏗️ Deployment
 
-```bash
-#build application for lambda
-GOOS=linux GOARCH=amd64 go build -tags lambda.norpc -o bootstrap main.go
-```
- 
+Deployment is automated via a **GitHub Actions workflow**. When changes are pushed to the main branch (or as configured in your workflow), the pipeline will build and deploy the Lambda function and related infrastructure using Terraform.
+
+**Prerequisite:**
+Before running `terraform plan` or `terraform apply` (either locally or via CI), ensure that all variables defined in `terraform/modules/lambda/ssm.tf` are created and initialized in your AWS environment. These variables are required for successful provisioning and configuration of the Lambda function and related resources.
+
+Manual build example (for local reference):
+
+
 ## 📈 Testing
 Unit tests: make test
 Coverage: make coverage
@@ -198,6 +201,8 @@ For issues, open a GitHub issue in this repository.
 - [Best practices writing lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 - [Code best practices for Go Lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/golang-handler.html#go-best-practices)
 - [Running and debugging lambda locally](https://medium.com/nagoya-foundation/running-and-debugging-go-lambda-functions-locally-156893e4ed0d)
+- [How to Create API Gateway Using Terraform & AWS Lambda](https://spacelift.io/blog/terraform-api-gateway)
+- [How to use a resource created in another module](https://discuss.hashicorp.com/t/how-to-use-a-resource-created-in-another-module/19032/3)
 
 ## 📄 License
 MIT License

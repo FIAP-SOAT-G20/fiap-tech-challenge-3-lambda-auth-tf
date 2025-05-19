@@ -39,7 +39,7 @@ help: ## 📜 Print this message
 	@echo
 
 .PHONY: fmt
-fmt: ## 🗂️ Format the code
+fmt: ## 🗂️  Format the code
 	@echo  "🟢 Formatting the code..."
 	$(GOCMD) fmt ./...
 	@echo
@@ -60,13 +60,13 @@ package: build ## 📦 Package the binary into a .zip file for Lambda deployment
 	@echo
 
 .PHONY: start-lambda
-start-lambda:  build  ## ▶ Start the lambda application locally to prepare to receive requests
+start-lambda:  build  ## ▶  Start the lambda application locally to prepare to receive requests
 	@echo "🟢 Starting lambda ..."
 	@$(GOCMD) run $(LAMBDA_DIR)/main.go
 	@echo
 
 .PHONY: trigger-lambda
-trigger-lambda: ## ▶ Trigger lambda with the input file stored in variable $LAMBDA_INPUT_FILE
+trigger-lambda: ## ⚡  Trigger lambda with the input file stored in variable $LAMBDA_INPUT_FILE
 	@echo "🟢 Triggering lambda with event: $(LAMBDA_INPUT_FILE)"
 	@PATH="$(shell go env GOPATH)/bin:$$PATH" \
 		'$(AWSLAMBDARPCCMD)' -a localhost:3300 -e $(LAMBDA_INPUT_FILE)
@@ -122,13 +122,13 @@ endif
 	@echo
 
 .PHONY: migrate-up
-migrate-up: ## ⬆️ Run migrations
+migrate-up: ## ⬆️  Run migrations
 	@echo "🟢 Running migrations..."
 	migrate -path ${MIGRATION_PATH} -database "${DB_URL}" -verbose up
 	@echo
 
 .PHONY: migrate-down
-migrate-down: ## ⬇️ Roll back migrations
+migrate-down: ## ⬇️  Roll back migrations
 	@echo "🔴 Rolling back migrations..."
 	migrate -path ${MIGRATION_PATH} -database "${DB_URL}" -verbose down
 	@echo
@@ -142,20 +142,20 @@ install: ## 📦 Install dependencies
 	@echo
 
 .PHONY: compose-up
-compose-up: ## ▶ Start development environment with Docker Compose
+compose-up: ## ▶  Start local database with docker compose
 	@echo "🟢 Starting development environment..."
 	docker compose pull
 	docker-compose up -d --wait --build
 	@echo
 
 .PHONY: compose-down
-compose-down: ## ■ Stop development environment with Docker Compose
+compose-down: ## ■  Stops local database with docker compose
 	@echo "🔴 Stopping development environment..."
 	docker-compose down
 	@echo
 
 .PHONY: compose-clean
-compose-clean: ## 🧹 Clean the application with Docker Compose, removing volumes and images
+compose-clean: ## 🧹 Clean the application with docker compose, removing volumes and images
 	@echo "🔴 Cleaning the application..."
 	docker compose down --volumes --rmi all
 	@echo
@@ -169,25 +169,25 @@ scan: ## 🔍 Run security scan
 
 
 .PHONY: terraform-init
-terraform-init: ## 🔄 Initialize Terraform
+terraform-init: ## 🔧 Initialize Terraform
 	@echo "🟢 Initializing Terraform..."
 	terraform init
 	@echo
 
 .PHONY: terraform-plan
-terraform-plan: ## 🔄 Plan Terraform
+terraform-plan: ## 💭 Plan Terraform
 	@echo "🟢 Planning Terraform..."
-	terraform plan
+	terraform plan -var-file=terraform/production.tfvars
 	@echo	
 
 .PHONY: terraform-apply
-terraform-apply: ## 🔄 Apply Terraform
+terraform-apply: ## ⚡ Apply Terraform
 	@echo "🟢 Applying Terraform..."
-	terraform apply -var-file=terraform/vars.tfvars
+	terraform apply -var-file=terraform/production.tfvars
 	@echo
 
 .PHONY: terraform-destroy
-terraform-destroy: ## 🔄 Destroy Terraform
+terraform-destroy: ## ⚠️  Destroy Terraform
 	@echo "🔴 Destroying Terraform..."
 	terraform destroy
 	@echo

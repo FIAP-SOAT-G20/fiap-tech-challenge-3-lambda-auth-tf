@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "lambda_artifacts" {
 
 resource "aws_s3_object" "lambda_zip" {
   bucket = aws_s3_bucket.lambda_artifacts.id
-  key    = "${filesha256(local.lambda_zip_path)}"  # content-addressed
+  key    = "${filesha256(local.lambda_zip_path)}" 
   source = local.lambda_zip_path
-  etag   = filemd5(local.lambda_zip_path)              # triggers upload on change
+  etag   = filemd5(local.lambda_zip_path)
 }
