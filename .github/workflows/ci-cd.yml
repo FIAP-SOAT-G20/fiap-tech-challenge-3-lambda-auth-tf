@@ -2,7 +2,7 @@ name: Build and Deploy Lambda with Terraform
 
 on:
   push:
-    branches: [main, feat/terraform]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -60,13 +60,16 @@ jobs:
           name: upload-lambda-artifact
           path: ./dist/function.zip
 
+      - name: Set working directory to terraform
+        run: |
+          cd terraform
+
       - name: Terraform Init
-        run: terraform init
+        run: make terraform-init
 
       - name: Terraform Plan
-        run: terraform plan
+        run: make terraform-plan
 
-      # Uncomment the following to auto-apply on main branch
-      # - name: Terraform Apply
-      #   if: github.ref == 'refs/heads/main'
-      #   run: terraform apply -auto-approve
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: make terraform-apply

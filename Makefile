@@ -183,7 +183,8 @@ terraform-plan: ## 💭 Plan Terraform
 .PHONY: terraform-apply
 terraform-apply: ## ⚡ Apply Terraform
 	@echo "🟢 Applying Terraform..."
-	terraform apply -var-file=terraform/production.tfvars
+	cd 
+	terraform apply -var-file=terraform/production.tfvars -auto-approve
 	@echo
 
 .PHONY: terraform-destroy
