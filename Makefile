@@ -169,26 +169,28 @@ scan: ## 🔍 Run security scan
 
 
 .PHONY: terraform-init
-terraform-init: ## 🔧 Initialize Terraform
+terraform-init: ## 🔧 Initialize Terraform loading state from AWS S3 bucket
 	@echo "🟢 Initializing Terraform..."
-	terraform init
+	cd terraform && terraform init -force-copy
 	@echo
 
 .PHONY: terraform-plan
 terraform-plan: ## 💭 Plan Terraform
 	@echo "🟢 Planning Terraform..."
-	terraform plan -var-file=terraform/production.tfvars
+	cd terraform && terraform plan -var-file=production.tfvars
 	@echo	
 
 .PHONY: terraform-apply
 terraform-apply: ## ⚡ Apply Terraform
 	@echo "🟢 Applying Terraform..."
-	cd 
-	terraform apply -var-file=terraform/production.tfvars -auto-approve
+	cd terraform
+	terraform apply -var-file=production.tfvars -auto-approve
 	@echo
 
 .PHONY: terraform-destroy
 terraform-destroy: ## ⚠️  Destroy Terraform
 	@echo "🔴 Destroying Terraform..."
+	cd terraform
 	terraform destroy
+	cd ..
 	@echo

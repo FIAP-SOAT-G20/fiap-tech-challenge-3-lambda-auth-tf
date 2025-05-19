@@ -15,5 +15,11 @@ resource "aws_lambda_function" "fastfood_auth_lambda" {
   environment {
     variables = local.merged_env
   }
+
+  vpc_config {
+    vpc_id             = var.vpc_id
+    subnet_ids         = var.vpc_subnet_ids
+    security_group_ids = [var.vpc_security_group_id]
+  }
 }
 

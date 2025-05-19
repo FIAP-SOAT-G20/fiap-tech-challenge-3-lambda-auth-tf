@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"errors"
 
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/core/domain"
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/core/domain/entity"
@@ -28,7 +27,7 @@ func (uc *customerUseCase) Get(ctx context.Context, i dto.GetCustomerInput) (*en
 	customers, err := uc.gateway.FindOne(ctx, i.CPF)
 
 	if err != nil {
-		return nil, domain.NewInternalError(errors.New(domain.ErrFetchingCustomer))
+		return nil, domain.NewInternalError(err)
 	}
 
 	if customers == nil {

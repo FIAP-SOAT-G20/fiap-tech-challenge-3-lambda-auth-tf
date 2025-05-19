@@ -225,6 +225,8 @@ For issues, open a GitHub issue in this repository.
 - [Running and debugging lambda locally](https://medium.com/nagoya-foundation/running-and-debugging-go-lambda-functions-locally-156893e4ed0d)
 - [How to Create API Gateway Using Terraform & AWS Lambda](https://spacelift.io/blog/terraform-api-gateway)
 - [How to use a resource created in another module](https://discuss.hashicorp.com/t/how-to-use-a-resource-created-in-another-module/19032/3)
+- [Setting Up VPC and Lambda Function with Terraform](https://dev.to/sepiyush/setting-up-vpc-and-lambda-function-with-terraform-3m9d)
+- [Storing terraform state on AWS S3](https://developer.hashicorp.com/terraform/language/backend/s3)
 
 ## 📄 License
 
