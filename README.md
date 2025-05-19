@@ -1,6 +1,6 @@
 # Lambda Authentication Service
 
-This project implements a serverless authentication service using Go, Clean Architecture, and AWS Lambda. The service receives customer credentials, validates them, and returns a signed JWT token upon successful authentication. The architecture enables scalability, maintainability, and testability.
+This project implements a serverless authentication service using Go, Clean Architecture, AWS Lambda and AWS API Gateway. The service receives customer credentials, validates them, and returns a signed JWT token upon successful authentication. The architecture enables scalability, maintainability, and testability.
 
 ---
 
@@ -69,13 +69,25 @@ This project implements a serverless authentication service using Go, Clean Arch
 │ └── jwt_service.go
 ├── main.go
 ├── terraform/
-│ ├── api-gateway.tf
-│ ├── iam.tf
-│ ├── lambda.tf
-│ ├── locals.tf
 │ ├── main.tf
-│ └── vars.tf
-└── test/
+│ ├── providers.tf
+│ ├── modules/
+│ │   ├── apigateway/
+│ │   │   ├── apigateway.tf
+│ │   │   ├── deployment.tf
+│ │   │   ├── lambda-integration.tf
+│ │   │   ├── lambda-permission.tf
+│ │   │   ├── stage.tf
+│ │   │   └── vars.tf
+│ │   └── lambda/
+│ │       ├── iam.tf
+│ │       ├── lambda.tf
+│ │       ├── locals.tf
+│ │       ├── output.tf
+│ │       ├── s3.tf
+│ │       ├── ssm.tf
+│ │       └── vars.tf
+│ └── test/
 └── fixture/
 ├── customer_fixture.go
 └── customer_request.json
@@ -103,10 +115,10 @@ This project implements a serverless authentication service using Go, Clean Arch
 - **AWS Lambda**
 - **Terraform**
 - **Docker**
+- **Docker Compose**
 - **GORM**
 - **Testify**
 - **JWT**
-- **Gin** (for local/test servers)
 - **Makefile** for automation
 - **Structured logging**
 
