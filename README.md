@@ -5,6 +5,7 @@ This project implements a serverless authentication service using Go, Clean Arch
 ---
 
 ## 📁 Folder Structure
+
 ```bash
 ├── Dockerfile
 ├── Makefile
@@ -94,6 +95,7 @@ This project implements a serverless authentication service using Go, Clean Arch
 
 
 ```
+
 ---
 
 ## 🚀 Features
@@ -105,7 +107,6 @@ This project implements a serverless authentication service using Go, Clean Arch
 - Error response standardization
 - Environment-based configuration
 - Terraform for AWS Lambda, API Gateway, IAM provisioning
-
 
 ---
 
@@ -132,51 +133,57 @@ This project implements a serverless authentication service using Go, Clean Arch
 - Docker & Docker Compose
 - AWS CLI
 - Terraform
-- 
+-
 
 ### Local Development
 
 1. Clone the repository:
-```bash
-   git clone https://github.com/yourorg/lambda-auth-service.git
-   cd lambda-auth-service
-```
+
+   ```bash
+      git clone https://github.com/yourorg/lambda-auth-service.git
+      cd lambda-auth-service
+   ```
 
 2. Create your environment variables:
-```shell
-cp .env.example .env
-# Edit .env as needed 
-```
+
+   ```shell
+   cp .env.example .env
+   # Edit .env as needed 
+   ```
 
 3. Install dependencies:
 
-```shell
-make install
-```
+   ```shell
+   make install
+   ```
 
 4. Initialize lambda to receive requests:
 
-```shell
-# Starts database
-make compose-up
-# Starts lambda
-make start-lambda
-```
+   ```shell
+   # Starts database
+   make compose-up
+   # Starts lambda
+   make start-lambda
+   ```
 
 5. Trigger lambda events
-```shell
-make trigger-lambda 
-```
+
+   ```shell
+   make trigger-lambda 
+   ```
 
 6. Run tests
-```shell
-make test 
-```
+
+   ```shell
+   make test 
+   ```
 
 7. View coverage:
-```shell
- make coverage
-```
+
+   ```shell
+   make coverage
+   ```
+
 ## 📝 Authentication API
 
 ## 🏗️ Deployment
@@ -188,26 +195,29 @@ Before running `terraform plan` or `terraform apply` (either locally or via CI),
 
 Manual build example (for local reference):
 
-
 ## 📈 Testing
+
 Unit tests: make test
 Coverage: make coverage
 Golden files for output validation are found in internal/infrastructure/aws/lambda/golden/.
 
 ## 🧩 Architecture
+
 The project follows Clean Architecture, dividing source code into distinct layers: Domain, UseCases, Adapters, and Infrastructure. See docs/architecture.drawio for the full diagram.
 
 ## 👏 Contributing
+
 Fork the repository and create your branch via make new-branch
 Run tests before PR (make test)
 Ensure code style with make lint
 Follow Conventional Commits for commit messages
 
 ## 🙏 Support
+
 For issues, open a GitHub issue in this repository.
 
-
 ## 📚 Docs
+
 - [Deploy Go AWS lambda function using Terraform](https://www.thedevbook.com/deploy-go-aws-lambda-function-using-terraform/)
 - [How to use terraform variables](https://spacelift.io/blog/how-to-use-terraform-variables)
 - [Best practices writing lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
@@ -217,4 +227,5 @@ For issues, open a GitHub issue in this repository.
 - [How to use a resource created in another module](https://discuss.hashicorp.com/t/how-to-use-a-resource-created-in-another-module/19032/3)
 
 ## 📄 License
+
 MIT License
