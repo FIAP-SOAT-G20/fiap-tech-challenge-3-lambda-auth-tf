@@ -30,6 +30,7 @@ var (
 	ErrPreconditionFailed = "precondition failed"
 
 	ErrFailedToCreatePaymentExternal = "failed to create payment external"
+	ErrFetchingCustomer              = "failed to fetch customer"
 )
 
 type ValidationError struct {

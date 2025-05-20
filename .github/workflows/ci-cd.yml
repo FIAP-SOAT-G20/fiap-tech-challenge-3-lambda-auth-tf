@@ -1,0 +1,75 @@
+name: Build and Deploy Lambda with Terraform
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.2' # Set your Go version
+
+      - name: Build Go Lambda binary
+        run: |
+          make build
+
+      - name: Zip Lambda binary
+        run: |
+          make package
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: upload-lambda-artifact
+          path: ./dist/function.zip
+
+
+  terraform:
+    needs: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    environment: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Download Lambda artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: upload-lambda-artifact
+          path: ./dist/function.zip
+
+      - name: Set working directory to terraform
+        run: |
+          cd terraform
+
+      - name: Terraform Init
+        run: make terraform-init
+
+      - name: Terraform Plan
+        run: make terraform-plan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: make terraform-apply

@@ -3,10 +3,10 @@
   "path": "/auth",
   "httpMethod": "POST",
   "headers": {
-    "Content-Type": "application/json",
+    "Content-Type": "application/json"
   },
   "multiValueHeaders": {
-    "Accept": ["application/json", "text/plain"],
+    "Accept": ["application/json", "text/plain"]
   },
   "queryStringParameters": {
   },

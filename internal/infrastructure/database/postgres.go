@@ -3,10 +3,11 @@ package database
 import (
 	"context"
 	"fmt"
-	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/infrastructure/config"
-	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/infrastructure/logger"
 	"log/slog"
 	"time"
+
+	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/infrastructure/config"
+	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/infrastructure/logger"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

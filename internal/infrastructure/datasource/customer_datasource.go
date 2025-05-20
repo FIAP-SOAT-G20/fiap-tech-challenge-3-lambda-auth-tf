@@ -3,6 +3,7 @@ package datasource
 import (
 	"context"
 	"errors"
+
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/core/domain/entity"
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/core/dto"
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/core/port"
@@ -24,6 +25,7 @@ func (ds *customerDataSource) FindOne(ctx context.Context, filter dto.CustomerDa
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
+		return nil, err
 	}
 	return &customer, nil
 }
