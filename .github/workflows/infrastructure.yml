@@ -3,16 +3,37 @@ name: Infrastructure Build
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
-  workflow_run:
-    workflows: [Application Build]
-    types:
-      - completed
-
+    branches: [master]
+  
 jobs:
+build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.2' # Set your Go version
+
+      - name: Build Go Lambda binary
+        run: |
+          make build
+
+      - name: Zip Lambda binary
+        run: |
+          make package
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: upload-lambda-artifact
+          path: ./dist/function.zip
+
   terraform:
+    needs: build
     runs-on: ubuntu-latest
     defaults:
       run:
