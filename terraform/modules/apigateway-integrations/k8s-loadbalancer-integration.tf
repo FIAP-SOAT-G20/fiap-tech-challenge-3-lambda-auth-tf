@@ -30,7 +30,7 @@ resource "aws_api_gateway_integration" "api_integration" {
 
   type                    = "HTTP_PROXY"
   integration_http_method = "ANY"
-  uri = "http://${var.loadbalancer_dns}/{proxy}"
+  uri = "http://${var.loadbalancer_dns}/api/{proxy}"
   passthrough_behavior    = "WHEN_NO_MATCH"
 
   request_parameters = {
