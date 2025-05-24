@@ -1,5 +1,5 @@
 locals {
-  lambda_zip_path = "function.zip"
+  lambda_zip_path = "../dist/function.zip"
 }
 
 locals {
