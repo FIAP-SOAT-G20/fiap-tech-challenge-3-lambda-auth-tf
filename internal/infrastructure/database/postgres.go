@@ -69,7 +69,7 @@ func NewPostgresConnection(cfg *config.Config, logger *logger.Logger) (*Database
 		cfg.DBPort,
 	)
 
-	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
+	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
 
 	// Configure GORM with slog logger
 	gormConfig := &gorm.Config{
