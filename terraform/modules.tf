@@ -16,7 +16,6 @@ module "lambda_function" {
   lambda_env = var.lambda_env
 
   # From tf-remote-k8s.tf
-  vpc_id = data.terraform_remote_state.k8s.outputs.vpc_id
   vpc_subnet_ids = data.terraform_remote_state.k8s.outputs.subnet_ids
   vpc_security_group_id = module.security_group.security_group_id 
   db_host = data.terraform_remote_state.db.outputs.rds_endpoint
