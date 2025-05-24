@@ -61,7 +61,7 @@ func (l *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql 
 }
 
 func NewPostgresConnection(cfg *config.Config, logger *logger.Logger) (*Database, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=require",
 		cfg.DBHost,
 		cfg.DBUser,
 		cfg.DBPassword,
@@ -69,7 +69,7 @@ func NewPostgresConnection(cfg *config.Config, logger *logger.Logger) (*Database
 		cfg.DBPort,
 	)
 
-	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
+	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=require", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
 
 	// Configure GORM with slog logger
 	gormConfig := &gorm.Config{
