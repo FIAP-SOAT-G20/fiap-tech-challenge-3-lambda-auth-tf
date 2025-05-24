@@ -5,6 +5,16 @@ resource "aws_api_gateway_resource" "api_resource" {
   path_part   = "api"
 }
 
+resource "aws_api_gateway_method" "api_method" {
+  rest_api_id   = var.api_gateway_id
+  resource_id   = aws_api_gateway_resource.api_resource.id
+  http_method   = "ANY"
+  authorization = "NONE"
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
+}
+
 resource "aws_api_gateway_resource" "api_proxy_resource" {
   rest_api_id = var.api_gateway_id
   parent_id   = aws_api_gateway_resource.api_resource.id
@@ -20,6 +30,18 @@ resource "aws_api_gateway_method" "api_proxy_method" {
   request_parameters = {
     "method.request.path.proxy" = true
   }
+}
+
+
+resource "aws_api_gateway_integration" "root_integration" {
+  rest_api_id = var.api_gateway_id
+  resource_id = aws_api_gateway_resource.api_resource.id
+  http_method = aws_api_gateway_method.api_method.http_method
+
+  type                    = "HTTP_PROXY"
+  integration_http_method = "ANY"
+  uri = "http://${var.loadbalancer_dns}/api"
+  passthrough_behavior    = "WHEN_NO_MATCH"
 }
 
 # Proxy integration
@@ -39,13 +61,3 @@ resource "aws_api_gateway_integration" "api_integration" {
 }
 
 # API Gateway Integration for the root resource
-resource "aws_api_gateway_integration" "root_integration" {
-  rest_api_id = var.api_gateway_id
-  resource_id = aws_api_gateway_resource.api_resource.id
-  http_method = aws_api_gateway_method.api_proxy_method.http_method
-
-  type                    = "HTTP_PROXY"
-  integration_http_method = "ANY"
-  uri = "http://${var.loadbalancer_dns}/"
-  passthrough_behavior    = "WHEN_NO_MATCH"
-}

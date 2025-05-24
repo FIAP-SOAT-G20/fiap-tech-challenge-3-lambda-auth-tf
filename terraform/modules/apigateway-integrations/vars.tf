@@ -13,9 +13,9 @@ variable "api_gateway_id" {
   description = "ID of the API Gateway"
 }
 
-variable "lambda_arn" {
+variable "lambda_invoke_arn" {
   type        = string
-  description = "ARN of the Lambda function"
+  description = "Invoke ARN of the Lambda function"
 }
 
 variable "loadbalancer_name" {
