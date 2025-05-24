@@ -72,8 +72,8 @@ jobs:
         run:  terraform init -force-copy
 
       - name: Terraform Plan
-        run: terraform plan -var-file=production.tfvars
+        run: terraform plan -var-file=production.tfvars -var 'loadbalancer_dns={{ secrets.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name={{ secrets.LOAD_BALANCE_NAME }}' 
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -var-file=production.tfvars -auto-approve
+        run: terraform apply -var-file=production.tfvars -auto-approve -var 'loadbalancer_dns={{ secrets.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name={{ secrets.LOAD_BALANCE_NAME }}' 

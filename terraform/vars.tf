@@ -22,3 +22,13 @@ variable "aws_region" {
   type        = string
   description = "AWS region"
 }
+
+variable "loadbalancer_dns" {
+  type        = string
+  description = "DNS of the LoadBalancer"
+}
+
+variable "loadbalancer_name" {
+  type        = string
+  description = "Name of the LoadBalancer"
+}
