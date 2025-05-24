@@ -1,10 +1,14 @@
-name: Build and Deploy Lambda with Terraform
+name: Infrastructure Build
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_run:
+    workflows: [Application Build]
+    types:
+      - completed
 
 jobs:
   build:
@@ -52,7 +56,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
       
       - name: Download Lambda artifact
         uses: actions/download-artifact@v4
@@ -65,11 +69,11 @@ jobs:
           cd terraform
 
       - name: Terraform Init
-        run: make terraform-init
+        run:  terraform init -force-copy
 
       - name: Terraform Plan
-        run: make terraform-plan
+        run: terraform plan -var-file=production.tfvars -var 'loadbalancer_dns={{ vars.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name={{ vars.LOAD_BALANCE_NAME }}' 
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: make terraform-apply
+        run: terraform apply -var-file=production.tfvars -auto-approve -var 'loadbalancer_dns={{ secrets.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name={{ secrets.LOAD_BALANCE_NAME }}' 

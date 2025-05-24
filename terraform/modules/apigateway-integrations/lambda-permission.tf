@@ -4,5 +4,5 @@ resource "aws_lambda_permission" "apigw_lambda" {
   function_name = var.lambda_arn
   principal = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_api_gateway_rest_api.fast_food_api.execution_arn}/*/*/*"
+  source_arn = "${var.api_gateway_invoke_arn}/*/*/*"
 }

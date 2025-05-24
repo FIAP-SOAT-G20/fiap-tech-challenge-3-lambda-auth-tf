@@ -17,3 +17,11 @@ variable "lambda_env" {
   type        = map(string)
   description = "Environment variables for the Lambda function"
 }
+
+
+
+variable "db_host" {
+  type        = string
+  description = "Database host"
+}
+

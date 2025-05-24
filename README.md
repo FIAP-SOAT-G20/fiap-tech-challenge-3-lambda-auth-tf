@@ -7,93 +7,39 @@ This project implements a serverless authentication service using Go, Clean Arch
 ## 📁 Folder Structure
 
 ```bash
-├── Dockerfile
-├── Makefile
-├── README.md
 ├── bootstrap
-├── compose.yml
-├── docs/
+├── docs
 │ └── architecture.drawio
-├── go.mod
-├── go.sum
-├── internal/
-│ ├── adapter/
-│ │ ├── controller/
-│ │ │ └── customer_controller.go
-│ │ ├── gateway/
-│ │ │ └── customer_gateway.go
-│ │ └── presenter/
-│ │ ├── customer_jwt_token_presenter.go
-│ │ ├── customer_jwt_token_presenter_test.go
-│ │ └── jwt_response.go
-│ ├── core/
-│ │ ├── domain/
-│ │ │ ├── entity/
-│ │ │ │ └── customer_entity.go
+├── internal
+│ ├── adapter
+│ │ ├── controller
+│ │ ├── gateway
+│ │ └── presenter
+│ ├── core
+│ │ ├── domain
+│ │ │ ├── entity
 │ │ │ └── errors.go
-│ │ ├── dto/
-│ │ │ ├── customer_dto.go
-│ │ │ └── presenter_dto.go
-│ │ ├── port/
-│ │ │ ├── authentication_port.go
-│ │ │ ├── customer_port.go
-│ │ │ ├── mocks/
-│ │ │ │ ├── authentication_mock.go
-│ │ │ │ ├── customer_mock.go
-│ │ │ │ └── presenter_mock.go
-│ │ │ └── presenter_port.go
-│ │ └── usecase/
-│ │ ├── customer_usecase.go
-│ │ └── customer_usecase_test.go
-│ └── infrastructure/
-│ ├── aws/
-│ │ └── lambda/
-│ │ ├── golden/
-│ │ │ └── success_response.golden
-│ │ ├── lambda.go
-│ │ ├── lambda_test.go
-│ │ ├── request/
-│ │ │ └── customer_request.go
-│ │ └── response/
-│ │ ├── error_response.go
-│ │ └── response.go
-│ ├── config/
-│ │ └── config.go
-│ ├── database/
-│ │ └── postgres.go
-│ ├── datasource/
-│ │ └── customer_datasource.go
-│ ├── logger/
-│ │ ├── logger.go
-│ │ └── pretty_handler.go
-│ └── service/
-│ └── jwt_service.go
-├── main.go
-├── terraform/
-│ ├── main.tf
-│ ├── providers.tf
-│ ├── modules/
-│ │   ├── apigateway/
-│ │   │   ├── apigateway.tf
-│ │   │   ├── deployment.tf
-│ │   │   ├── lambda-integration.tf
-│ │   │   ├── lambda-permission.tf
-│ │   │   ├── stage.tf
-│ │   │   └── vars.tf
-│ │   └── lambda/
-│ │       ├── iam.tf
-│ │       ├── lambda.tf
-│ │       ├── locals.tf
-│ │       ├── output.tf
-│ │       ├── s3.tf
-│ │       ├── ssm.tf
-│ │       └── vars.tf
-│ └── test/
-└── fixture/
-├── customer_fixture.go
-└── customer_request.json
-
-
+│ │ ├── dto
+│ │ ├── port
+│ │ │ └── mocks
+│ │ └── usecase
+│ └── infrastructure
+│     ├── aws
+│     │ └── lambda
+│     │     ├── golden
+│     │     ├── request
+│     │     └── response
+│     ├── config
+│     ├── database
+│     ├── datasource
+│     ├── logger
+│     └── service
+├── terraform
+│ ├── modules
+│ │   ├── apigateway
+│ │   └── lambda
+│   └── test
+└── fixture
 ```
 
 ---
@@ -120,7 +66,7 @@ This project implements a serverless authentication service using Go, Clean Arch
 - **GORM**
 - **Testify**
 - **JWT**
-- **Makefile** for automation
+- **Makefile**
 - **Structured logging**
 
 ---
@@ -129,8 +75,7 @@ This project implements a serverless authentication service using Go, Clean Arch
 
 ### Prerequisites
 
-- Go 1.19+
-- Docker & Docker Compose
+- Go 1.24+
 - AWS CLI
 - Terraform
 -
@@ -140,8 +85,8 @@ This project implements a serverless authentication service using Go, Clean Arch
 1. Clone the repository:
 
    ```bash
-      git clone https://github.com/yourorg/lambda-auth-service.git
-      cd lambda-auth-service
+      git clone https://github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf.git
+      cd fiap-tech-challenge-3-lambda-auth-tf
    ```
 
 2. Create your environment variables:
@@ -193,7 +138,7 @@ Deployment is automated via a **GitHub Actions workflow**. When changes are push
 **Prerequisite:**
 Before running `terraform plan` or `terraform apply` (either locally or via CI), ensure that all variables defined in `terraform/modules/lambda/ssm.tf` are created and initialized in your AWS environment. These variables are required for successful provisioning and configuration of the Lambda function and related resources.
 
-Manual build example (for local reference):
+All the variables can be found on `.env.example` file.
 
 ## 📈 Testing
 
@@ -203,11 +148,11 @@ Golden files for output validation are found in internal/infrastructure/aws/lamb
 
 ## 🧩 Architecture
 
-The project follows Clean Architecture, dividing source code into distinct layers: Domain, UseCases, Adapters, and Infrastructure. See docs/architecture.drawio for the full diagram.
+The project follows Clean Architecture, dividing source code into distinct layers: Domain, UseCases, Adapters, and Infrastructure. See docs/architecture.drawio for the infrastructure diagram.
 
 ## 👏 Contributing
 
-Fork the repository and create your branch via make new-branch
+Fork the repository and create your branch from master branch.
 Run tests before PR (make test)
 Ensure code style with make lint
 Follow Conventional Commits for commit messages
