@@ -1,6 +1,6 @@
 
 resource "aws_s3_bucket" "lambda_artifacts" {
-  bucket = "fastfood-lambda-artifacts-g22-tc3"
+  bucket = "fast-food-lambda-artifacts-g22-tc3"
 }
 
 resource "aws_s3_object" "lambda_zip" {
