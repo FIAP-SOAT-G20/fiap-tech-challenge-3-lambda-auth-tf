@@ -30,7 +30,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: lambda-artifact
-          path: ./dist/function.zip
+          path: function.zip
 
   terraform:
     needs: build
@@ -59,7 +59,7 @@ jobs:
         with:
           name: lambda-artifact
           working-directory: terraform
-          path: ./dist/function.zip
+          path: function.zip
 
       - name: Terraform Init
         working-directory: terraform
