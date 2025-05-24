@@ -1,6 +1,12 @@
-data "aws_ssm_parameter" "db_host" {
-  name            = "/fast-food/auth/${var.lambda_env.STAGE}/db_host"
-  with_decryption = false
+# data "aws_ssm_parameter" "db_host" {
+#   name            = "/fast-food/auth/${var.lambda_env.STAGE}/db_host"
+#   with_decryption = false
+# }
+
+resource "aws_ssm_parameter" "db_host" {
+  name  = "/fast-food/auth/${var.lambda_env.STAGE}/db_host"
+  type  = "String"
+  value = var.db_host
 }
 
 data "aws_ssm_parameter" "db_port" {

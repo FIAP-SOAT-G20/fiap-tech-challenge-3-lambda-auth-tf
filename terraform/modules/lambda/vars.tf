@@ -27,3 +27,8 @@ variable "api_gateway_root_resource_id" {
   type        = string
   description = "Root resource ID of the API Gateway"
 }
+
+variable "db_host" {
+  type        = string
+  description = "Database host"
+}

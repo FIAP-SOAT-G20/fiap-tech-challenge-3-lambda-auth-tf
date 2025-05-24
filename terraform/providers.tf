@@ -1,10 +1,10 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
 
   default_tags {
     tags = {
       Project = "fastfood-auth-g22-tc3"
-      Environment = "production"
+      Environment = var.lambda_env.ENVIRONMENT
     }
   }
 }
