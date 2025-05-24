@@ -1,10 +1,14 @@
-name: Build and Deploy Lambda with Terraform
+name: Infrastructure Build
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_run:
+    workflows: [Application Build]
+    types:
+      - completed
 
 jobs:
   build:
@@ -65,11 +69,11 @@ jobs:
           cd terraform
 
       - name: Terraform Init
-        run: make terraform-init
+        run:  terraform init -force-copy
 
       - name: Terraform Plan
-        run: make terraform-plan
+        run: terraform plan -var-file=production.tfvars
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: make terraform-apply
+        run: terraform apply -var-file=production.tfvars -auto-approve
