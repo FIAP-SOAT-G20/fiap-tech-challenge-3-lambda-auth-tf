@@ -12,33 +12,7 @@ on:
       - completed
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.24.2' # Set your Go version
-
-      - name: Build Go Lambda binary
-        run: |
-          make build
-
-      - name: Zip Lambda binary
-        run: |
-          make package
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: upload-lambda-artifact
-          path: ./dist/function.zip
-
-
   terraform:
-    needs: build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -62,19 +36,18 @@ jobs:
       - name: Download Lambda artifact
         uses: actions/download-artifact@v4
         with:
-          name: upload-lambda-artifact
+          name: download-lambda-artifact
           path: ./dist/function.zip
 
-      - name: Set working directory to terraform
-        run: |
-          cd terraform
-
       - name: Terraform Init
+        working-directory: terraform
         run:  terraform init -force-copy
 
       - name: Terraform Plan
+        working-directory: terraform
         run: terraform plan -var-file=production.tfvars -var 'loadbalancer_dns={{ vars.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name={{ vars.LOAD_BALANCE_NAME }}' 
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
+        working-directory: terraform
         run: terraform apply -var-file=production.tfvars -auto-approve -var 'loadbalancer_dns={{ secrets.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name={{ secrets.LOAD_BALANCE_NAME }}' 
