@@ -18,6 +18,11 @@ variable "key_k8s_remote_state" {
   description = "Key name for the remote state"
 }
 
+variable "key_db_remote_state" {
+  type        = string
+  description = "Key name for the remote state"
+}
+
 variable "aws_region" {
   type        = string
   description = "AWS region"

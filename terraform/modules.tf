@@ -3,6 +3,11 @@ module "api_gateway" {
   source = "./modules/apigateway"
 }
 
+module "security_group" {
+  source = "./modules/security-group"
+  vpc_id = data.terraform_remote_state.k8s.outputs.vpc_id
+}
+
 module "lambda_function" {
   source = "./modules/lambda"
   depends_on = [module.api_gateway]
@@ -13,8 +18,8 @@ module "lambda_function" {
   # From tf-remote-k8s.tf
   vpc_id = data.terraform_remote_state.k8s.outputs.vpc_id
   vpc_subnet_ids = data.terraform_remote_state.k8s.outputs.subnet_ids
-  vpc_security_group_id = data.terraform_remote_state.k8s.outputs.security_group_id 
-  db_host = data.terraform_remote_state.k8s.outputs.database_host
+  vpc_security_group_id = module.security_group.security_group_id 
+  db_host = data.terraform_remote_state.db.outputs.rds_endpoint
 } 
 
 module "api_gateway_integrations" {
