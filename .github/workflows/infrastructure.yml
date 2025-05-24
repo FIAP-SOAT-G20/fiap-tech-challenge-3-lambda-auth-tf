@@ -29,7 +29,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: upload-lambda-artifact
+          name: lambda-artifact
           path: ./dist/function.zip
 
   terraform:
@@ -57,7 +57,7 @@ jobs:
       - name: Download Lambda artifact
         uses: actions/download-artifact@v4
         with:
-          name: download-lambda-artifact
+          name: lambda-artifact
           path: ./dist/function.zip
 
       - name: Terraform Init
