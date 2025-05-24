@@ -17,3 +17,13 @@ variable "lambda_env" {
   type        = map(string)
   description = "Environment variables for the Lambda function"
 }
+
+variable "api_gateway_id" {
+  type        = string
+  description = "ID of the API Gateway"
+}
+
+variable "api_gateway_root_resource_id" {
+  type        = string
+  description = "Root resource ID of the API Gateway"
+}
