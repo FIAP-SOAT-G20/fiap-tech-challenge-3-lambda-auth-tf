@@ -13,6 +13,11 @@ variable "api_gateway_id" {
   description = "ID of the API Gateway"
 }
 
+variable "lambda_arn" {
+  type        = string
+  description = "ARN of the Lambda function"
+}
+
 variable "lambda_invoke_arn" {
   type        = string
   description = "Invoke ARN of the Lambda function"
