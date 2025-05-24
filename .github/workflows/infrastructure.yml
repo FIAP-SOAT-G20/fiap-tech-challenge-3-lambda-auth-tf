@@ -27,22 +27,6 @@ jobs:
         run: |
           make package
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: lambda-artifact
-          path: ./dist/function.zip
-
-  terraform:
-    needs: build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: terraform
-    environment: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
@@ -53,12 +37,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ vars.AWS_REGION }}
-      
-      - name: Download Lambda artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: lambda-artifact
-          path: ./dist/function.zip
 
       - name: Terraform Init
         working-directory: terraform
@@ -66,9 +44,9 @@ jobs:
 
       - name: Terraform Plan
         working-directory: terraform
-        run: terraform plan -var-file=production.tfvars -var 'loadbalancer_dns={{ vars.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name={{ vars.LOAD_BALANCE_NAME }}' 
+        run: terraform plan -var-file=production.tfvars -var 'loadbalancer_dns=${{ vars.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name=${{ vars.LOAD_BALANCE_NAME }}' 
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         working-directory: terraform
-        run: terraform apply -var-file=production.tfvars -auto-approve -var 'loadbalancer_dns={{ secrets.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name={{ secrets.LOAD_BALANCE_NAME }}' 
+        run: terraform apply -var-file=production.tfvars -auto-approve -var 'loadbalancer_dns=${{ vars.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name=${{ vars.LOAD_BALANCE_NAME }}' 
