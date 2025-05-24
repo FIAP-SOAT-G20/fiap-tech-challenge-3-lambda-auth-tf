@@ -31,7 +31,7 @@ module "api_gateway_integrations" {
   api_gateway_invoke_arn = module.api_gateway.api_gateway_invoke_arn
 
   # From modules/lambda/output.tf
-  lambda_arn = module.lambda_function.fastfood_auth_lambda_arn
+  lambda_invoke_arn = module.lambda_function.fastfood_auth_lambda_invoke_arn
 
   # From vars.tf
   loadbalancer_name = var.loadbalancer_name
