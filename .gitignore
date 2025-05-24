@@ -54,10 +54,6 @@ crash.*.log
 # Terraform lock file (uncomment if you want to ignore it)
 # .terraform.lock.hcl
 
-# Terraform variable files
-*.tfvars
-*.tfvars.json
-
 # CLI configuration files
 .terraformrc
 terraform.rc
