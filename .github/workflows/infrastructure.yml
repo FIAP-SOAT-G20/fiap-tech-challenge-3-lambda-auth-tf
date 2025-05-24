@@ -47,6 +47,6 @@ jobs:
         run: terraform plan -var-file=production.tfvars -var 'loadbalancer_dns=${{ vars.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name=${{ vars.LOAD_BALANCE_NAME }}' 
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         working-directory: terraform
         run: terraform apply -var-file=production.tfvars -auto-approve -var 'loadbalancer_dns=${{ vars.LOAD_BALANCE_DNS }}'  -var 'loadbalancer_name=${{ vars.LOAD_BALANCE_NAME }}' 
