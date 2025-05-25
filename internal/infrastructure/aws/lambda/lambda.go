@@ -69,18 +69,18 @@ func handleRequest(ctx context.Context, req events.APIGatewayProxyRequest) (even
 	if req.IsBase64Encoded {
 		body, err = base64.StdEncoding.DecodeString(req.Body)
 		if err != nil {
-			return response.NewAPIGatewayProxyResponseError(err), err
+			return response.NewAPIGatewayProxyResponseError(err), nil
 		}
 	}
 	err = json.Unmarshal(body, &customerRequest)
 	if err != nil {
-		return response.NewAPIGatewayProxyResponseError(err), err
+		return response.NewAPIGatewayProxyResponseError(err), nil
 	}
 	customerInput := customerRequest.ToGetCustomerInput()
 	resp, err := customerController.Get(ctx, pr, customerInput)
 	if err != nil {
 		log.Printf("Failed to get customer: %v", err)
-		return response.NewAPIGatewayProxyResponseError(err), err
+		return response.NewAPIGatewayProxyResponseError(err), nil
 	}
 
 	return response.NewAPIGatewayProxyResponse(resp), nil

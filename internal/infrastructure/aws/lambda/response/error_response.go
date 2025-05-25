@@ -3,9 +3,10 @@ package response
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+
 	"github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-lambda-auth-tf/internal/core/domain"
 	"github.com/aws/aws-lambda-go/events"
-	"net/http"
 )
 
 type errorResponse struct {
@@ -50,7 +51,7 @@ func NewAPIGatewayProxyResponseError(err error) events.APIGatewayProxyResponse {
 	errorResponse := NewErrorResponse(title, http.StatusText(status), err.Error())
 	jsn, _ := json.Marshal(errorResponse)
 	return events.APIGatewayProxyResponse{
-		StatusCode: 0,
+		StatusCode: status,
 		Body:       string(jsn),
 	}
 }
