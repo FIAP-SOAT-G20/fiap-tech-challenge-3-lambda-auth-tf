@@ -16,7 +16,7 @@ TEST_PATH=./internal/...
 TEST_COVERAGE_FILE_NAME=coverage.out
 MIGRATION_PATH = internal/infrastructure/database/migrations
 DB_URL = postgres://postgres:postgres@localhost:5432/fastfood_10soat_g18_tc2?sslmode=disable
-LAMBDA_INPUT_FILE=test/data/api_gateway_proxy_request_event_payload.json
+LAMBDA_INPUT_FILE=test/data/api_gateway_proxy_request_event_payload_empty_cpf.json
 
 # Go commands
 AWSLAMBDARPCCMD ?= awslambdarpc
