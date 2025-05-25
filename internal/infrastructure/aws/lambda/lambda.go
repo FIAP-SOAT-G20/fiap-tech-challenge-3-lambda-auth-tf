@@ -2,6 +2,7 @@ package lambda
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -28,13 +29,14 @@ var customerGateway port.CustomerGateway
 var customerUseCase port.CustomerUseCase
 var customerController port.CustomerController
 var pr port.Presenter
+var l *logger.Logger
 
 // init function is called in a lambda cold start. So, at this moment is initialized
 // all structures and also the database connection
 func init() {
 	fmt.Println("🟠 Initializing lambda presenter")
 	cfg := config.LoadConfig()
-	l := logger.NewLogger(cfg)
+	l = logger.NewLogger(cfg)
 
 	if cfg.Environment == "test" {
 		return
@@ -60,9 +62,17 @@ func StartLambda() {
 
 // handleRequest responsible to handle lambda events
 func handleRequest(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	fmt.Println("Starting lambda handler")
+	l.InfoContext(ctx, "Starting lambda handler", "isBase64Encoded", req.IsBase64Encoded, "body", req.Body)
 	var customerRequest request.CustomerRequest
-	err := json.Unmarshal([]byte(req.Body), &customerRequest)
+	var body []byte = []byte(req.Body)
+	var err error
+	if req.IsBase64Encoded {
+		body, err = base64.StdEncoding.DecodeString(req.Body)
+		if err != nil {
+			return response.NewAPIGatewayProxyResponseError(err), err
+		}
+	}
+	err = json.Unmarshal(body, &customerRequest)
 	if err != nil {
 		return response.NewAPIGatewayProxyResponseError(err), err
 	}

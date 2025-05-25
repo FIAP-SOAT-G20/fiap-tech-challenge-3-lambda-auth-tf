@@ -30,6 +30,6 @@
     "httpMethod": "POST",
     "apiId": "xyz123"
   },
-  "body": "{\"cpf\": \"123.456.789-00\"}",
-  "isBase64Encoded": false
+  "body": "eyJjcGYiOiAiMTIzLjQ1Ni43ODktMDAifQ==",
+  "isBase64Encoded": true
 }
