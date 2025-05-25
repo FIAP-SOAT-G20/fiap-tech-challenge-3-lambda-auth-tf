@@ -173,6 +173,15 @@ For issues, open a GitHub issue in this repository.
 - [Setting Up VPC and Lambda Function with Terraform](https://dev.to/sepiyush/setting-up-vpc-and-lambda-function-with-terraform-3m9d)
 - [Storing terraform state on AWS S3](https://developer.hashicorp.com/terraform/language/backend/s3)
 
+## 🔗 Related Projects
+
+This project is part of a larger system that includes:
+
+- [Database Infrastructure (Terraform)](https://github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-db-tf) - Infrastructure as Code for PostgreSQL RDS using Terraform
+- [Kubernetes Infrastructure (Terraform)](https://github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-k8s-tf) - Infrastructure as Code for EKS cluster and Kubernetes resources using Terraform
+- [API Service](https://github.com/FIAP-SOAT-G20/fiap-tech-challenge-3-api) - Main backend service implementing the Fast Food ordering system
+
+
 ## 📄 License
 
 MIT License
