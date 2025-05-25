@@ -20,12 +20,12 @@ func NewCustomerUseCase(gateway port.CustomerGateway) port.CustomerUseCase {
 
 // Get return a customer by his CPF
 func (uc *customerUseCase) Get(ctx context.Context, i dto.GetCustomerInput) (*entity.Customer, error) {
-	if i.CPF == "" {
-		return nil, domain.NewInvalidInputError("cpf is required")
+	var cpf = i.CPF
+	if cpf == "" {
+		cpf = "000.000.000-00"
 	}
 
-	customers, err := uc.gateway.FindOne(ctx, i.CPF)
-
+	customers, err := uc.gateway.FindOne(ctx, cpf)
 	if err != nil {
 		return nil, domain.NewInternalError(err)
 	}
